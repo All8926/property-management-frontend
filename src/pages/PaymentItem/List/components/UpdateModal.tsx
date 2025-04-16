@@ -1,14 +1,13 @@
 import { updateUserUsingPost } from '@/services/backend/userController';
 import { ProColumns, ProTable } from '@ant-design/pro-components';
 import '@umijs/max';
-import { message, Modal } from 'antd';
+import {message, Modal, Space, Typography} from 'antd';
 import React from 'react';
 import {updatePaymentItemUsingPost} from "@/services/backend/paymentItemController";
 
 interface Props {
   oldData?: API.User;
   visible: boolean;
-  columns: ProColumns<API.User>[];
   onSubmit: (values: API.PaymentItemUpdateRequest) => void;
   onCancel: () => void;
 }
@@ -38,11 +37,52 @@ const handleUpdate = async (fields: API.PaymentItemUpdateRequest) => {
  * @constructor
  */
 const UpdateModal: React.FC<Props> = (props) => {
-  const { oldData, visible, columns, onSubmit, onCancel } = props;
+  const { oldData, visible,   onSubmit, onCancel } = props;
 
   if (!oldData) {
     return <></>;
   }
+
+  /**
+   * 表格列配置
+   */
+  const columns: ProColumns<API.PaymentItem>[] = [
+    {
+      title: '项目名称',
+      dataIndex: 'name',
+      valueType: 'text',
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '请输入项目名称',
+          },
+        ],
+      }
+    },
+
+    {
+      title: '过期时间',
+      dataIndex: 'expirationTime',
+      valueType: 'dateTime',
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '请选择过期时间',
+          }
+        ]
+      }
+    },
+    {
+      title: '介绍',
+      dataIndex: 'profile',
+      valueType: 'textarea',
+      hideInSearch: true,
+      ellipsis: true,
+    },
+  ];
+
 
   return (
     <Modal
@@ -53,12 +93,19 @@ const UpdateModal: React.FC<Props> = (props) => {
       onCancel={() => {
         onCancel?.();
       }}
+
     >
       <ProTable
         type="form"
         columns={columns}
         form={{
           initialValues: oldData,
+        }}
+        onSubmit={async (values: API.PaymentItemUpdateRequest) => {
+          const success = await handleUpdate({...values,id:oldData.id as any});
+          if (success) {
+            onSubmit?.(values);
+          }
         }}
       />
     </Modal>

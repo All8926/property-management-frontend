@@ -25,6 +25,7 @@ export default [
     routes: [
       { path: '/payment', redirect: '/payment/list' },
       { icon: 'table', path: '/payment/list', component: './PaymentItem/List', name: '缴费项目' },
+      { icon: 'table', path: '/payment/records', component: './PaymentItem/Records', name: '缴费记录' },
     ],
   },
   { path: '/', redirect: '/welcome' },

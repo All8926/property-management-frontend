@@ -2,6 +2,8 @@ import {ProColumns, ProTable} from '@ant-design/pro-components';
 import '@umijs/max';
 import {Button, message, Modal, QRCode, Space, theme} from 'antd';
 import React from 'react';
+import {deletePaymentItemUsingPost} from "@/services/backend/paymentItemController";
+import {addPaymentRecordUsingPost} from "@/services/backend/paymentRecordController";
 
 
 
@@ -10,6 +12,7 @@ interface Props {
   visible: boolean;
   columns: ProColumns<API.User>[];
   onCancel: () => void;
+  onSubmit: () => void;
 }
 
 
@@ -19,7 +22,7 @@ interface Props {
  * @constructor
  */
 const UpdateModal: React.FC<Props> = (props) => {
-  const {oldData, visible, columns, onCancel} = props;
+  const {oldData, visible, columns, onCancel,onSubmit} = props;
   const { useToken } = theme;
   const { token } = useToken();
 
@@ -28,6 +31,30 @@ const UpdateModal: React.FC<Props> = (props) => {
   if (!oldData) {
     return <></>;
   }
+
+  /**
+   * 支付完成
+   *
+   * @param row
+   */
+  const handlePay = async () => {
+    const hide = message.loading('正在操作');
+    const params : API.PaymentRecordAddRequest = {
+      paymentId: oldData.id
+    }
+    try {
+      await addPaymentRecordUsingPost(params);
+      hide();
+      message.success('操作成功');
+      return true;
+    } catch (error: any) {
+      hide();
+      message.error('操作失败，' + error.message);
+      return false;
+    }finally {
+      setPayQrcodeVisible(false)
+    }
+  };
 
   return (
    <>
@@ -72,11 +99,17 @@ const UpdateModal: React.FC<Props> = (props) => {
 
        />
      </Modal>
-   <Modal open={payQrcodeVisible} onCancel={() => setPayQrcodeVisible(false)} footer={null}>
+   <Modal open={payQrcodeVisible} onCancel={() => setPayQrcodeVisible(false)} footer={null} zIndex={9999}>
     <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center',justifyContent: 'center',gap: 20}}>
       <QRCode value="https://ant.design/" color={token.colorSuccessText} />
       <p>请使用微信扫码支付</p>
-      <Button type={"primary"} onClick={() => setPayQrcodeVisible(false)}>
+      <Button type={"primary"} onClick={ async () => {
+        const success = await handlePay();
+        if (success) {
+          onSubmit?.();
+        }
+
+      }}>
         支付完成
       </Button>
     </div>

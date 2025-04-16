@@ -35,6 +35,12 @@ declare namespace API {
     message?: string;
   };
 
+  type BaseResponsePagePaymentRecordVO_ = {
+    code?: number;
+    data?: PagePaymentRecordVO_;
+    message?: string;
+  };
+
   type BaseResponsePagePost_ = {
     code?: number;
     data?: PagePost_;
@@ -149,6 +155,19 @@ declare namespace API {
     total?: number;
   };
 
+  type PagePaymentRecordVO_ = {
+    countId?: string;
+    current?: number;
+    maxLimit?: number;
+    optimizeCountSql?: boolean;
+    orders?: OrderItem[];
+    pages?: number;
+    records?: PaymentRecordVO[];
+    searchCount?: boolean;
+    size?: number;
+    total?: number;
+  };
+
   type PagePost_ = {
     countId?: string;
     current?: number;
@@ -248,6 +267,32 @@ declare namespace API {
     name?: string;
     profile?: string;
     userId?: number;
+  };
+
+  type PaymentRecordAddRequest = {
+    paymentId?: number;
+  };
+
+  type PaymentRecordQueryRequest = {
+    current?: number;
+    id?: number;
+    pageSize?: number;
+    payDate?: string;
+    paymentName?: string;
+    sortField?: string;
+    sortOrder?: string;
+    userName?: string;
+  };
+
+  type PaymentRecordVO = {
+    createTime?: string;
+    id?: number;
+    payAmount?: string;
+    payDate?: string;
+    paymentId?: number;
+    paymentName?: string;
+    userId?: number;
+    userName?: string;
   };
 
   type Post = {

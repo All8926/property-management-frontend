@@ -226,7 +226,6 @@ const UserAdminPage: React.FC = () => {
       />
       <UpdateModal
         visible={updateModalVisible}
-        columns={columns}
         oldData={currentRow}
         onSubmit={() => {
           setUpdateModalVisible(false);
@@ -242,6 +241,9 @@ const UserAdminPage: React.FC = () => {
         columns={columns}
         oldData={currentRow}
         onCancel={() => {
+          setDetailModalVisible(false);
+        }}
+        onSubmit={() => {
           setDetailModalVisible(false);
         }}
       />
