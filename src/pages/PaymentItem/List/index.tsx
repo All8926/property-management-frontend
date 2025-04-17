@@ -1,4 +1,4 @@
- 
+
 import {PlusOutlined} from '@ant-design/icons';
 import type {ActionType, ProColumns} from '@ant-design/pro-components';
 import {PageContainer, ProTable} from '@ant-design/pro-components';
@@ -175,7 +175,7 @@ const PaymentListPage: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<API.User>
+      <ProTable<API.PaymentItem>
         headerTitle={'缴费项目列表'}
         actionRef={actionRef}
         rowKey="key"
@@ -203,7 +203,7 @@ const PaymentListPage: React.FC = () => {
             sortField,
             sortOrder,
             ...filter,
-          } as API.UserQueryRequest);
+          } as API.PaymentItemQueryRequest);
 
           return {
             success: code === 0,

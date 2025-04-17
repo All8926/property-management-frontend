@@ -61,7 +61,7 @@ const PaymentRecordsPage: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<API.User>
+      <ProTable<API.PaymentRecordVO>
         headerTitle={'缴费项目列表'}
         rowKey="key"
         search={{
@@ -81,7 +81,7 @@ const PaymentRecordsPage: React.FC = () => {
             sortField,
             sortOrder,
             ...filter,
-          } as API.UserQueryRequest);
+          } as API.PaymentRecordQueryRequest);
 
           return {
             success: code === 0,

@@ -8,9 +8,9 @@ import {addPaymentRecordUsingPost} from "@/services/backend/paymentRecordControl
 
 
 interface Props {
-  oldData?: API.User;
+  oldData?: API.PaymentItem;
   visible: boolean;
-  columns: ProColumns<API.User>[];
+  columns: ProColumns<API.PaymentItem>[];
   onCancel: () => void;
   onSubmit: () => void;
 }
@@ -21,7 +21,7 @@ interface Props {
  * @param props
  * @constructor
  */
-const UpdateModal: React.FC<Props> = (props) => {
+const DetailModal: React.FC<Props> = (props) => {
   const {oldData, visible, columns, onCancel,onSubmit} = props;
   const { useToken } = theme;
   const { token } = useToken();
@@ -118,4 +118,4 @@ const UpdateModal: React.FC<Props> = (props) => {
 
   );
 };
-export default UpdateModal;
+export default DetailModal;

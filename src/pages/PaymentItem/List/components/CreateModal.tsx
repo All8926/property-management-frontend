@@ -7,7 +7,7 @@ import {addPaymentItemUsingPost} from "@/services/backend/paymentItemController"
 
 interface Props {
   visible: boolean;
-  columns: ProColumns<API.User>[];
+  columns: ProColumns<API.PaymentItem>[];
   onSubmit: (values: API.PaymentItemAddRequest) => void;
   onCancel: () => void;
 }

@@ -1,16 +1,15 @@
-import { deleteUserUsingPost } from '@/services/backend/userController';
+
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import CreateModal from './components/CreateModal';
 import UpdateModal from './components/UpdateModal';
 
-import { listComplaintVoByPageUsingPost } from '@/services/backend/complaintController';
-import { uploadFileUsingPost } from '@/services/backend/fileController';
-import { useModel } from '@@/exports';
+import {deleteComplaintUsingPost, listComplaintVoByPageUsingPost} from '@/services/backend/complaintController';
+import {Access, useAccess, useModel} from '@@/exports';
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Form, message, Modal, Space, Tag, Typography, Upload } from 'antd';
-import { UploadFile } from 'antd/lib/upload/interface';
+import { Button,   message, Modal, Space, Tag, Typography,  } from 'antd';
 import React, { useRef, useState } from 'react';
+import DetailModal from "@/pages/Complaint/components/DetailModal";
 
 /**
  * 投诉管理页面
@@ -22,31 +21,29 @@ const ComplaintPage: React.FC = () => {
   const [createModalVisible, setCreateModalVisible] = useState<boolean>(false);
   // 是否显示更新窗口
   const [updateModalVisible, setUpdateModalVisible] = useState<boolean>(false);
+  // 是否显示查看窗口
+  const [detailModalVisible, setDetailModalVisible] = useState<boolean>(false);
   const actionRef = useRef<ActionType>();
   // 当前用户点击的数据
   const [currentRow, setCurrentRow] = useState<API.ComplaintVO>();
 
-  const { initialState, setInitialState } = useModel('@@initialState');
-
+  const { initialState  } = useModel('@@initialState');
+  const access = useAccess();
 
   /**
    * 删除节点
    *
    * @param row
    */
-  const handleDelete = async (row: API.User) => {
-    if (row.id === initialState?.currentUser?.id) {
-      message.error('不能删除自己');
-      return;
-    }
+  const handleDelete = async (row: API.DeleteRequest) => {
     Modal.confirm({
       title: '确认删除?',
-      content: `你确定要删除用户 ${row.userName} 吗?`,
+      content: `你确定要删除该投诉吗?`,
       onOk: async () => {
         const hide = message.loading('正在删除');
         if (!row) return true;
         try {
-          await deleteUserUsingPost({
+          await deleteComplaintUsingPost({
             id: row.id as any,
           });
           hide();
@@ -119,20 +116,30 @@ const ComplaintPage: React.FC = () => {
         <Space size="middle"  >
           {initialState?.currentUser?.id === record.userId && (
             <>
-              <Typography.Link
-              key="update"
+              {record.status === 0 && (<Typography.Link
+                key="update"
                 onClick={() => {
                   setCurrentRow(record);
                   setUpdateModalVisible(true);
                 }}
               >
                 修改
-              </Typography.Link>
+              </Typography.Link>)}
               <Typography.Link type="danger" onClick={() => handleDelete(record)} key="delete">
                 删除
               </Typography.Link>
             </>
           )}
+          <Typography.Link
+            key="update"
+            onClick={() => {
+              setCurrentRow(record);
+              setDetailModalVisible(true);
+            }}
+          >
+            查看
+          </Typography.Link>
+
         </Space>
       ),
     },
@@ -148,6 +155,7 @@ const ComplaintPage: React.FC = () => {
         }}
         toolBarRender={() => [
           <Button
+            key="create"
             type="primary"
             onClick={() => {
               setCreateModalVisible(true);
@@ -197,6 +205,11 @@ const ComplaintPage: React.FC = () => {
           setUpdateModalVisible(false);
         }}
       />
+      <DetailModal visible={detailModalVisible} onCancel={setDetailModalVisible.bind(null, false)} oldData={currentRow} onSubmit={() => {
+        setDetailModalVisible(false);
+        setCurrentRow(undefined);
+        actionRef.current?.reload();
+      }} />
     </PageContainer>
   );
 };

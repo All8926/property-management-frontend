@@ -19,6 +19,14 @@ interface Props {
  */
 const CreateModal: React.FC<Props> = (props) => {
   const { visible, onSubmit, onCancel } = props;
+
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState('');
+  const [previewTitle, setPreviewTitle] = useState('');
+  const formRef = useRef<ProFormInstance>();
+
   /**
    * 添加节点
    * @param fields
@@ -28,6 +36,8 @@ const CreateModal: React.FC<Props> = (props) => {
     try {
       await addComplaintUsingPost(fields);
       hide();
+      setFileList([])
+      setImageUrls([]);
       message.success('创建成功');
       return true;
     } catch (error: any) {
@@ -36,12 +46,7 @@ const CreateModal: React.FC<Props> = (props) => {
       return false;
     }
   };
-  const [fileList, setFileList] = useState<UploadFile[]>([]);
-  const [imageUrls, setImageUrls] = useState<string[]>([]);
-  const [previewOpen, setPreviewOpen] = useState(false);
-  const [previewImage, setPreviewImage] = useState('');
-  const [previewTitle, setPreviewTitle] = useState('');
-  const formRef = useRef<ProFormInstance>();
+
 
   const handlePreview = async (file: UploadFile) => {
     setPreviewImage(file.url || (file.response?.data as string));
@@ -72,6 +77,7 @@ const CreateModal: React.FC<Props> = (props) => {
       open={visible}
       footer={null}
       onCancel={() => {
+
         onCancel?.();
       }}
     >
@@ -86,7 +92,7 @@ const CreateModal: React.FC<Props> = (props) => {
           }
         }}
       >
-        <ProFormText name="title" label="标题" />
+        <ProFormText rules={[{ required: true, message: '标题不能为空' }]} name="title" label="标题" />
         <ProFormTextArea name="content" label="详情" />
 
         <Form.Item
