@@ -1,4 +1,4 @@
-import {deleteUserUsingPost} from '@/services/backend/userController';
+ 
 import {PlusOutlined} from '@ant-design/icons';
 import type {ActionType, ProColumns} from '@ant-design/pro-components';
 import {PageContainer, ProTable} from '@ant-design/pro-components';
@@ -17,7 +17,7 @@ import DetailModal from "@/pages/PaymentItem/List/components/DetailModal";
  *
  * @constructor
  */
-const UserAdminPage: React.FC = () => {
+const PaymentListPage: React.FC = () => {
   // 是否显示新建窗口
   const [createModalVisible, setCreateModalVisible] = useState<boolean>(false);
   // 是否显示更新窗口
@@ -26,7 +26,7 @@ const UserAdminPage: React.FC = () => {
   const [detailModalVisible, setDetailModalVisible] = useState<boolean>(false);
   const actionRef = useRef<ActionType>();
   // 当前用户点击的数据
-  const [currentRow, setCurrentRow] = useState<API.User>();
+  const [currentRow, setCurrentRow] = useState<API.PaymentItem>();
 
   const access = useAccess();
   /**
@@ -250,4 +250,4 @@ const UserAdminPage: React.FC = () => {
     </PageContainer>
   );
 };
-export default UserAdminPage;
+export default PaymentListPage;

@@ -28,6 +28,13 @@ export default [
       { icon: 'table', path: '/payment/records', component: './PaymentItem/Records', name: '缴费记录' },
     ],
   },
+  {
+    name:"投诉管理",
+    icon: 'profile',
+    path: '/complaint',
+    component: './Complaint',
+  },
+
   { path: '/', redirect: '/welcome' },
   { path: '*', layout: false, component: './404' },
 ];

@@ -1,12 +1,12 @@
-import { updateUserUsingPost } from '@/services/backend/userController';
+
 import { ProColumns, ProTable } from '@ant-design/pro-components';
 import '@umijs/max';
-import {message, Modal, Space, Typography} from 'antd';
+import {message, Modal } from 'antd';
 import React from 'react';
 import {updatePaymentItemUsingPost} from "@/services/backend/paymentItemController";
 
 interface Props {
-  oldData?: API.User;
+  oldData?: API.PaymentItem;
   visible: boolean;
   onSubmit: (values: API.PaymentItemUpdateRequest) => void;
   onCancel: () => void;

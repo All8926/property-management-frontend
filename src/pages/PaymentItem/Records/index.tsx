@@ -1,16 +1,10 @@
-import {deleteUserUsingPost} from '@/services/backend/userController';
-import {PlusOutlined} from '@ant-design/icons';
-import type {ActionType, ProColumns} from '@ant-design/pro-components';
+
+import type { ProColumns} from '@ant-design/pro-components';
 import {PageContainer, ProTable} from '@ant-design/pro-components';
 
-import {Button, message, Modal, Space, Typography} from 'antd';
-import React, {useRef, useState} from 'react';
+import React  from 'react';
 
 import {Access, useAccess} from 'umi';
-import {deletePaymentItemUsingPost, listPaymentItemVoByPageUsingPost} from "@/services/backend/paymentItemController";
-import CreateModal from "@/pages/PaymentItem/List/components/CreateModal";
-import UpdateModal from "@/pages/PaymentItem/List/components/UpdateModal";
-import DetailModal from "@/pages/PaymentItem/List/components/DetailModal";
 import {listPaymentRecordVoByPageUsingPost} from "@/services/backend/paymentRecordController";
 
 /**
@@ -18,16 +12,8 @@ import {listPaymentRecordVoByPageUsingPost} from "@/services/backend/paymentReco
  *
  * @constructor
  */
-const UserAdminPage: React.FC = () => {
-  // 是否显示新建窗口
-  const [createModalVisible, setCreateModalVisible] = useState<boolean>(false);
-  // 是否显示更新窗口
-  const [updateModalVisible, setUpdateModalVisible] = useState<boolean>(false);
-  // 是否显示查看窗口
-  const [detailModalVisible, setDetailModalVisible] = useState<boolean>(false);
-  const actionRef = useRef<ActionType>();
-  // 当前用户点击的数据
-  const [currentRow, setCurrentRow] = useState<API.User>();
+const PaymentRecordsPage: React.FC = () => {
+
 
   const access = useAccess();
 
@@ -77,7 +63,6 @@ const UserAdminPage: React.FC = () => {
     <PageContainer>
       <ProTable<API.User>
         headerTitle={'缴费项目列表'}
-        actionRef={actionRef}
         rowKey="key"
         search={{
           labelWidth: 120,
@@ -110,4 +95,4 @@ const UserAdminPage: React.FC = () => {
     </PageContainer>
   );
 };
-export default UserAdminPage;
+export default PaymentRecordsPage;

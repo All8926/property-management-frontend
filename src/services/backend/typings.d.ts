@@ -23,6 +23,12 @@ declare namespace API {
     message?: string;
   };
 
+  type BaseResponsePageComplaintVO_ = {
+    code?: number;
+    data?: PageComplaintVO_;
+    message?: string;
+  };
+
   type BaseResponsePagePaymentItem_ = {
     code?: number;
     data?: PagePaymentItem_;
@@ -94,6 +100,48 @@ declare namespace API {
     timestamp?: string;
   };
 
+  type ComplaintAddRequest = {
+    content?: string;
+    imageList?: string[];
+    title?: string;
+  };
+
+  type ComplaintEditRequest = {
+    content?: string;
+    id?: number;
+    image?: string;
+    title?: string;
+  };
+
+  type ComplaintQueryRequest = {
+    current?: number;
+    id?: number;
+    pageSize?: number;
+    sortField?: string;
+    sortOrder?: string;
+    status?: number;
+    title?: string;
+  };
+
+  type ComplaintUpdateRequest = {
+    id?: number;
+    remark?: string;
+    status?: number;
+  };
+
+  type ComplaintVO = {
+    content?: string;
+    createTime?: string;
+    id?: number;
+    imageList?: string[];
+    remark?: string;
+    status?: number;
+    title?: string;
+    updateTime?: string;
+    user?: UserVO;
+    userId?: number;
+  };
+
   type DeleteRequest = {
     id?: number;
   };
@@ -127,6 +175,19 @@ declare namespace API {
   type OrderItem = {
     asc?: boolean;
     column?: string;
+  };
+
+  type PageComplaintVO_ = {
+    countId?: string;
+    current?: number;
+    maxLimit?: number;
+    optimizeCountSql?: boolean;
+    orders?: OrderItem[];
+    pages?: number;
+    records?: ComplaintVO[];
+    searchCount?: boolean;
+    size?: number;
+    total?: number;
   };
 
   type PagePaymentItem_ = {
