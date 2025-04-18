@@ -11,6 +11,12 @@ declare namespace API {
     message?: string;
   };
 
+  type BaseResponseListUserVO_ = {
+    code?: number;
+    data?: UserVO[];
+    message?: string;
+  };
+
   type BaseResponseLoginUserVO_ = {
     code?: number;
     data?: LoginUserVO;
@@ -56,6 +62,12 @@ declare namespace API {
   type BaseResponsePagePostVO_ = {
     code?: number;
     data?: PagePostVO_;
+    message?: string;
+  };
+
+  type BaseResponsePageRepairsVO_ = {
+    code?: number;
+    data?: PageRepairsVO_;
     message?: string;
   };
 
@@ -109,7 +121,7 @@ declare namespace API {
   type ComplaintEditRequest = {
     content?: string;
     id?: number;
-    image?: string;
+    imageList?: string[];
     title?: string;
   };
 
@@ -250,6 +262,19 @@ declare namespace API {
     orders?: OrderItem[];
     pages?: number;
     records?: PostVO[];
+    searchCount?: boolean;
+    size?: number;
+    total?: number;
+  };
+
+  type PageRepairsVO_ = {
+    countId?: string;
+    current?: number;
+    maxLimit?: number;
+    optimizeCountSql?: boolean;
+    orders?: OrderItem[];
+    pages?: number;
+    records?: RepairsVO[];
     searchCount?: boolean;
     size?: number;
     total?: number;
@@ -431,6 +456,59 @@ declare namespace API {
     id?: number;
     tagList?: string[];
     thumbNum?: number;
+    title?: string;
+    updateTime?: string;
+    user?: UserVO;
+    userId?: number;
+  };
+
+  type RepairsAddRequest = {
+    content?: string;
+    imageList?: string[];
+    title?: string;
+  };
+
+  type RepairsCommentRequest = {
+    comment?: string;
+    id?: number;
+  };
+
+  type RepairsEditRequest = {
+    content?: string;
+    id?: number;
+    imageList?: string[];
+    remark?: string;
+    title?: string;
+  };
+
+  type RepairsQueryRequest = {
+    current?: number;
+    id?: number;
+    pageSize?: number;
+    servicemanId?: number;
+    sortField?: string;
+    sortOrder?: string;
+    status?: number;
+    title?: string;
+  };
+
+  type RepairsUpdateRequest = {
+    id?: number;
+    remark?: string;
+    servicemanId?: number;
+    status?: number;
+  };
+
+  type RepairsVO = {
+    comment?: string;
+    content?: string;
+    createTime?: string;
+    id?: number;
+    imageList?: string[];
+    remark?: string;
+    servicemanId?: number;
+    servicemanUser?: UserVO;
+    status?: number;
     title?: string;
     updateTime?: string;
     user?: UserVO;

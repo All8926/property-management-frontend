@@ -1,5 +1,6 @@
 import { addComplaintUsingPost } from '@/services/backend/complaintController';
 import { uploadFileUsingPost } from '@/services/backend/fileController';
+import { checkImageFile } from '@/utils';
 import { ProForm, ProFormInstance, ProFormText, ProFormTextArea } from '@ant-design/pro-components';
 import '@umijs/max';
 import { Form, message, Modal, Upload } from 'antd';
@@ -67,6 +68,7 @@ const CreateModal: React.FC<Props> = (props) => {
       onError?.(err as any);
     }
   };
+ 
 
   return (
     <Modal
@@ -107,15 +109,16 @@ const CreateModal: React.FC<Props> = (props) => {
             fileList={fileList}
             customRequest={customRequest}
             onPreview={handlePreview}
+            beforeUpload={(file) => checkImageFile(file)}
             onChange={({ fileList: newFileList }) => {
               console.log('fileList:', newFileList);
-
               setFileList(newFileList);
               const urls = newFileList
                 .filter((file) => file.status === 'done' && (file.url || file.response?.data))
                 .map((file) => file.url || file.response?.data);
               setImageUrls(urls);
             }}
+
           >
             上传
           </Upload>

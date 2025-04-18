@@ -23,7 +23,7 @@ const UserAdminPage: React.FC = () => {
   // 当前用户点击的数据
   const [currentRow, setCurrentRow] = useState<API.User>();
 
-  const {initialState,setInitialState} = useModel('@@initialState');
+  const {initialState } = useModel('@@initialState');
 
   /**
    * 删除节点
@@ -87,12 +87,9 @@ const UserAdminPage: React.FC = () => {
       title: '角色',
       dataIndex: 'userRole',
       valueEnum: {
-        user: {
-          text: '业主',
-        },
-        admin: {
-          text: '管理员',
-        },
+        user: '业主',
+        admin: '管理员',
+        serviceman: '维修人员',
       },
     },
     {

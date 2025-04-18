@@ -120,6 +120,14 @@ export async function userRegisterUsingPost(
   });
 }
 
+/** getRepairsList GET /api/user/repairs/list */
+export async function getRepairsListUsingGet(options?: { [key: string]: any }) {
+  return request<API.BaseResponseListUserVO_>('/api/user/repairs/list', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
+
 /** updateUser POST /api/user/update */
 export async function updateUserUsingPost(
   body: API.UserUpdateRequest,

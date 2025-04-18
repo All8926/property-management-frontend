@@ -34,6 +34,12 @@ export default [
     path: '/complaint',
     component: './Complaint',
   },
+  {
+    name:"报修管理",
+    icon: 'ToolOutlined',
+    path: '/repairs',
+    component: './Repairs',
+  },
 
   { path: '/', redirect: '/welcome' },
   { path: '*', layout: false, component: './404' },

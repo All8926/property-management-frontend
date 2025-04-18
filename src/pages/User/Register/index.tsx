@@ -1,6 +1,6 @@
 import Footer from '@/components/Footer';
 import { userRegisterUsingPost } from '@/services/backend/userController';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { LockOutlined,  PhoneOutlined, UserOutlined } from '@ant-design/icons';
 import { LoginForm, ProFormText } from '@ant-design/pro-components';
 import { useEmotionCss } from '@ant-design/use-emotion-css';
 import { Helmet, history } from '@umijs/max';
@@ -75,8 +75,8 @@ const UserRegisterPage: React.FC = () => {
             maxWidth: '75vw',
           }}
           logo={<img alt="logo" style={{ height: '100%' }} src="/logo.png" />}
-          title="鱼厂招聘系统 - 注册"
-          subTitle={'高效招聘、爽快求职'}
+          title="物业管理系统 - 注册"
+          subTitle={'现代物业管理系统，安全与服务的完美结合。'}
           initialValues={{
             autoLogin: true,
           }}
@@ -144,6 +144,21 @@ const UserRegisterPage: React.FC = () => {
                   },
                 ]}
               />
+              <ProFormText
+                name="userPhone"
+                fieldProps={{
+                  size: 'large',
+                  prefix: <PhoneOutlined />,
+                }}
+                placeholder={'请输入手机号'}
+                rules={[
+                  {
+                    required: true,
+                    message: '手机号是必填项！',
+                  },
+                ]}
+              />
+
             </>
           )}
 

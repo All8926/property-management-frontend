@@ -1,33 +1,38 @@
-
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
-import { PageContainer, ProTable } from '@ant-design/pro-components';
+import { PageContainer, ProForm, ProFormTextArea, ProTable } from '@ant-design/pro-components';
 import CreateModal from './components/CreateModal';
 import UpdateModal from './components/UpdateModal';
 
-import {deleteComplaintUsingPost, listComplaintVoByPageUsingPost} from '@/services/backend/complaintController';
-import {  useModel} from '@@/exports';
+import DetailModal from '@/pages/Repairs/components/DetailModal';
+import {
+  addCommentUsingPost,
+  deleteRepairsUsingPost,
+  listRepairsVoByPageUsingPost,
+} from '@/services/backend/repairsController';
+import { useModel } from '@@/exports';
 import { PlusOutlined } from '@ant-design/icons';
-import { Button,   message, Modal, Space, Tag, Typography,  } from 'antd';
+import { Button, message, Modal, Space, Tag, Typography } from 'antd';
 import React, { useRef, useState } from 'react';
-import DetailModal from "@/pages/Complaint/components/DetailModal";
 
 /**
- * 投诉管理页面
+ * 报修管理页面
  *
  * @constructor
  */
-const ComplaintPage: React.FC = () => {
+const RepairsPage: React.FC = () => {
   // 是否显示新建窗口
   const [createModalVisible, setCreateModalVisible] = useState<boolean>(false);
   // 是否显示更新窗口
   const [updateModalVisible, setUpdateModalVisible] = useState<boolean>(false);
   // 是否显示查看窗口
   const [detailModalVisible, setDetailModalVisible] = useState<boolean>(false);
+  // 是否显示评价窗口
+  const [commentModalVisible, setCommentModalVisible] = useState<boolean>(false);
   const actionRef = useRef<ActionType>();
   // 当前用户点击的数据
-  const [currentRow, setCurrentRow] = useState<API.ComplaintVO>();
+  const [currentRow, setCurrentRow] = useState<API.RepairsVO>();
 
-  const { initialState  } = useModel('@@initialState');
+  const { initialState } = useModel('@@initialState');
 
   /**
    * 删除节点
@@ -37,12 +42,12 @@ const ComplaintPage: React.FC = () => {
   const handleDelete = async (row: API.DeleteRequest) => {
     Modal.confirm({
       title: '确认删除?',
-      content: `你确定要删除该投诉吗?`,
+      content: `你确定要删除该报修吗?`,
       onOk: async () => {
         const hide = message.loading('正在删除');
         if (!row) return true;
         try {
-          await deleteComplaintUsingPost({
+          await deleteRepairsUsingPost({
             id: row.id as any,
           });
           hide();
@@ -62,9 +67,26 @@ const ComplaintPage: React.FC = () => {
   };
 
   /**
+   * 评价
+   */
+  const handleEvaluate = async (record: API.RepairsCommentRequest) => {
+    const hide = message.loading('正在删除');
+    try {
+      await addCommentUsingPost(record);
+      hide();
+      message.success('评价成功');
+      actionRef?.current?.reload();
+      setCommentModalVisible(false);
+    }catch (error: any) {
+      console.log(error);
+
+    }
+  };
+
+  /**
    * 表格列配置
    */
-  const columns: ProColumns<API.ComplaintVO>[] = [
+  const columns: ProColumns<API.RepairsVO>[] = [
     {
       title: 'id',
       dataIndex: 'id',
@@ -85,7 +107,7 @@ const ComplaintPage: React.FC = () => {
       hideInTable: true,
     },
     {
-      title: '投诉人',
+      title: '报修人',
       dataIndex: ['user', 'userName'],
       valueType: 'text',
       hideInSearch: true,
@@ -95,13 +117,32 @@ const ComplaintPage: React.FC = () => {
       title: '状态',
       dataIndex: 'status',
       hideInForm: true,
+      valueEnum: {
+        0: '审核中',
+        1: '已驳回',
+        2: '维修中',
+        3: '无法维修',
+        4: '待评价',
+        5: '已完成',
+      },
       render: (_, record) => {
         if (record.status === 0) {
-          return <Tag color="processing" >待处理</Tag>;
-        } else if (record.status === 1) {
-          return <Tag color="success">已处理</Tag>;
-        } else if (record.status === 2) {
+          return <Tag color="processing">审核中</Tag>;
+        }
+        if (record.status === 1) {
           return <Tag color="error">已驳回</Tag>;
+        }
+        if (record.status === 2) {
+          return <Tag color="cyan">维修中</Tag>;
+        }
+        if (record.status === 3) {
+          return <Tag color="error">无法维修</Tag>;
+        }
+        if (record.status === 4) {
+          return <Tag color="orange">待评价</Tag>;
+        }
+        if (record.status === 5) {
+          return <Tag color="success">已完成</Tag>;
         }
         return <Tag color="default">未知</Tag>;
       },
@@ -112,18 +153,20 @@ const ComplaintPage: React.FC = () => {
       dataIndex: 'option',
       valueType: 'option',
       render: (_, record) => (
-        <Space size="middle"  >
+        <Space size="middle">
           {initialState?.currentUser?.id === record.userId && (
             <>
-              {record.status === 0 && (<Typography.Link
-                key="update"
-                onClick={() => {
-                  setCurrentRow(record);
-                  setUpdateModalVisible(true);
-                }}
-              >
-                修改
-              </Typography.Link>)}
+              {record.status === 0 && (
+                <Typography.Link
+                  key="update"
+                  onClick={() => {
+                    setCurrentRow(record);
+                    setUpdateModalVisible(true);
+                  }}
+                >
+                  修改
+                </Typography.Link>
+              )}
               <Typography.Link type="danger" onClick={() => handleDelete(record)} key="delete">
                 删除
               </Typography.Link>
@@ -138,7 +181,18 @@ const ComplaintPage: React.FC = () => {
           >
             查看
           </Typography.Link>
-
+          {record.status === 4 && record.userId === initialState?.currentUser?.id && (
+            <Typography.Link
+              key="comment"
+              type='warning'
+              onClick={() => {
+                setCurrentRow(record);
+                setCommentModalVisible(true);
+              }}
+            >
+              评价
+            </Typography.Link>
+          )}
         </Space>
       ),
     },
@@ -146,7 +200,7 @@ const ComplaintPage: React.FC = () => {
   return (
     <PageContainer>
       <ProTable<API.User>
-        headerTitle={'投诉列表'}
+        headerTitle={'报修列表'}
         actionRef={actionRef}
         rowKey="key"
         search={{
@@ -167,7 +221,7 @@ const ComplaintPage: React.FC = () => {
           const sortField = Object.keys(sort)?.[0];
           const sortOrder = sort?.[sortField] ?? undefined;
 
-          const { data, code } = await listComplaintVoByPageUsingPost({
+          const { data, code } = await listRepairsVoByPageUsingPost({
             ...params,
             sortField,
             sortOrder,
@@ -204,12 +258,34 @@ const ComplaintPage: React.FC = () => {
           setUpdateModalVisible(false);
         }}
       />
-      <DetailModal visible={detailModalVisible} onCancel={setDetailModalVisible.bind(null, false)} oldData={currentRow} onSubmit={() => {
-        setDetailModalVisible(false);
-        setCurrentRow(undefined);
-        actionRef.current?.reload();
-      }} />
+      <DetailModal
+        visible={detailModalVisible}
+        onCancel={setDetailModalVisible.bind(null, false)}
+        oldData={currentRow}
+        onSubmit={() => {
+          setDetailModalVisible(false);
+          setCurrentRow(undefined);
+          actionRef.current?.reload();
+        }}
+      />
+      <Modal
+        destroyOnClose
+        open={commentModalVisible}
+        footer={null}
+        onCancel={() => {
+          setCommentModalVisible(false);
+        }}
+      >
+        <ProForm
+          onFinish={async (values) => {
+            console.log('表单提交数据：', values);
+            handleEvaluate({...values, id: currentRow?.id})
+          }}
+        >
+          <ProFormTextArea  rules={[{ required: true, message: '请输入评价内容' }]} name="comment" label="评价内容" />
+        </ProForm>
+      </Modal>
     </PageContainer>
   );
 };
-export default ComplaintPage;
+export default RepairsPage;

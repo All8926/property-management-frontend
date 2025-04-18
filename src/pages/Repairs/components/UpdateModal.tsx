@@ -1,4 +1,4 @@
-import { editComplaintUsingPost } from '@/services/backend/complaintController';
+import { editRepairsUsingPost } from '@/services/backend/repairsController';
 import { uploadFileUsingPost } from '@/services/backend/fileController';
 import { checkImageFile } from '@/utils';
 import { ProForm, ProFormInstance, ProFormText, ProFormTextArea } from '@ant-design/pro-components';
@@ -9,8 +9,8 @@ import React, { useEffect, useRef, useState } from 'react';
 
 interface Props {
   visible: boolean;
-  oldData: API.ComplaintVO | undefined;
-  onSubmit: (values: API.ComplaintAddRequest) => void;
+  oldData: API.RepairsVO | undefined;
+  onSubmit: (values: API.RepairsAddRequest) => void;
   onCancel: () => void;
 }
 
@@ -44,10 +44,10 @@ const UpdateModal: React.FC<Props> = (props) => {
    * 修改节点
    * @param fields
    */
-  const handleUpdate = async (fields: API.ComplaintEditRequest) => {
+  const handleUpdate = async (fields: API.RepairsEditRequest) => {
     const hide = message.loading('正在修改');
     try {
-      await editComplaintUsingPost(fields);
+      await editRepairsUsingPost(fields);
       hide();
       message.success('操作成功');
       return true;
@@ -76,7 +76,7 @@ const UpdateModal: React.FC<Props> = (props) => {
 
   const customRequest: UploadProps['customRequest'] = async ({ file, onSuccess, onError }) => {
     try {
-      const result = await uploadFileUsingPost({ biz: 'complaint_image' }, {}, file as File);
+      const result = await uploadFileUsingPost({ biz: 'repairs_image' }, {}, file as File);
       (file as any).url = result.data; // 让上传组件能预览
       onSuccess?.(result, file);
     } catch (err) {
@@ -84,7 +84,6 @@ const UpdateModal: React.FC<Props> = (props) => {
       onError?.(err as any);
     }
   };
-
 
   if (!oldData) {
     return <></>;
@@ -124,9 +123,9 @@ const UpdateModal: React.FC<Props> = (props) => {
             accept="image/*"
             multiple
             customRequest={customRequest}
+            beforeUpload={(file) => checkImageFile(file)}
             onPreview={handlePreview}
             fileList={fileList}
-            beforeUpload={(file) => checkImageFile(file)}
             onChange={({ fileList }) => {
               setFileList(fileList);
               const urls = fileList

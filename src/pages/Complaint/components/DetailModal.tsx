@@ -1,9 +1,9 @@
 
 import '@umijs/max';
-import {Button, Descriptions, DescriptionsProps, Image, message, Modal, Popconfirm, Space, Upload} from 'antd';
+import {  Descriptions, DescriptionsProps, Image, message, Modal } from 'antd';
 import React from 'react';
-import {ProForm, ProFormRadio, ProFormText, ProFormTextArea} from "@ant-design/pro-components";
-import {editComplaintUsingPost, updateComplaintUsingPost} from "@/services/backend/complaintController";
+import {ProForm, ProFormRadio,  ProFormTextArea} from "@ant-design/pro-components";
+import {  updateComplaintUsingPost} from "@/services/backend/complaintController";
 import {useAccess} from "@@/exports";
 import {Access} from "umi";
 
@@ -51,11 +51,13 @@ const DetailModal: React.FC<Props> = (props) => {
       key: '5',
       label: '详情',
       children: oldData?.content,
+      span:2
     },
     {
       key: '6',
       label: '审核意见',
       children: oldData?.remark || '无',
+      span:2
     },
     {
       key: '7',
