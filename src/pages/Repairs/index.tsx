@@ -114,6 +114,14 @@ const RepairsPage: React.FC = () => {
       hideInForm: true,
     },
     {
+      title: '创建时间',
+      dataIndex: 'createTime',
+      valueType: 'dateTime',
+      hideInSearch: true,
+      hideInForm: true,
+      sorter: true,
+    },
+    {
       title: '状态',
       dataIndex: 'status',
       hideInForm: true,
@@ -146,6 +154,14 @@ const RepairsPage: React.FC = () => {
         }
         return <Tag color="default">未知</Tag>;
       },
+    },
+    {
+      title: '创建时间',
+      dataIndex: 'createTime',
+      valueType: 'dateTime',
+      hideInSearch: true,
+      hideInForm: true,
+      sorter: true,
     },
 
     {

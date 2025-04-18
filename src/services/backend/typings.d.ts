@@ -35,6 +35,12 @@ declare namespace API {
     message?: string;
   };
 
+  type BaseResponsePageNoticeVO_ = {
+    code?: number;
+    data?: PageNoticeVO_;
+    message?: string;
+  };
+
   type BaseResponsePagePaymentItem_ = {
     code?: number;
     data?: PagePaymentItem_;
@@ -80,6 +86,12 @@ declare namespace API {
   type BaseResponsePageUserVO_ = {
     code?: number;
     data?: PageUserVO_;
+    message?: string;
+  };
+
+  type BaseResponsePageVisitorVO_ = {
+    code?: number;
+    data?: PageVisitorVO_;
     message?: string;
   };
 
@@ -184,6 +196,40 @@ declare namespace API {
     userRole?: string;
   };
 
+  type NoticeAddRequest = {
+    content?: string;
+    title?: string;
+  };
+
+  type NoticeQueryRequest = {
+    current?: number;
+    id?: number;
+    pageSize?: number;
+    publishTime?: string;
+    sortField?: string;
+    sortOrder?: string;
+    status?: number;
+    title?: string;
+  };
+
+  type NoticeUpdateRequest = {
+    content?: string;
+    id?: number;
+    title?: string;
+  };
+
+  type NoticeVO = {
+    content?: string;
+    createTime?: string;
+    id?: number;
+    publishTime?: string;
+    status?: number;
+    title?: string;
+    updateTime?: string;
+    user?: UserVO;
+    userId?: number;
+  };
+
   type OrderItem = {
     asc?: boolean;
     column?: string;
@@ -197,6 +243,19 @@ declare namespace API {
     orders?: OrderItem[];
     pages?: number;
     records?: ComplaintVO[];
+    searchCount?: boolean;
+    size?: number;
+    total?: number;
+  };
+
+  type PageNoticeVO_ = {
+    countId?: string;
+    current?: number;
+    maxLimit?: number;
+    optimizeCountSql?: boolean;
+    orders?: OrderItem[];
+    pages?: number;
+    records?: NoticeVO[];
     searchCount?: boolean;
     size?: number;
     total?: number;
@@ -301,6 +360,19 @@ declare namespace API {
     orders?: OrderItem[];
     pages?: number;
     records?: UserVO[];
+    searchCount?: boolean;
+    size?: number;
+    total?: number;
+  };
+
+  type PageVisitorVO_ = {
+    countId?: string;
+    current?: number;
+    maxLimit?: number;
+    optimizeCountSql?: boolean;
+    orders?: OrderItem[];
+    pages?: number;
+    records?: VisitorVO[];
     searchCount?: boolean;
     size?: number;
     total?: number;
@@ -616,5 +688,52 @@ declare namespace API {
     userPhone?: string;
     userProfile?: string;
     userRole?: string;
+  };
+
+  type VisitorAddRequest = {
+    remark?: string;
+    visitingTime?: string;
+    visitorName?: string;
+    visitorPhone?: string;
+  };
+
+  type VisitorEditRequest = {
+    id?: number;
+    remark?: string;
+    visitingTime?: string;
+    visitorName?: string;
+    visitorPhone?: string;
+  };
+
+  type VisitorQueryRequest = {
+    current?: number;
+    id?: number;
+    pageSize?: number;
+    sortField?: string;
+    sortOrder?: string;
+    status?: number;
+    visitingTime?: string;
+    visitorName?: string;
+    visitorPhone?: string;
+  };
+
+  type VisitorUpdateRequest = {
+    id?: number;
+    reason?: string;
+    status?: number;
+  };
+
+  type VisitorVO = {
+    createTime?: string;
+    id?: number;
+    reason?: string;
+    remark?: string;
+    status?: number;
+    updateTime?: string;
+    user?: UserVO;
+    userId?: number;
+    visitingTime?: string;
+    visitorName?: string;
+    visitorPhone?: string;
   };
 }

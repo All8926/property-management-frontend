@@ -55,6 +55,7 @@ const PaymentRecordsPage: React.FC = () => {
       title: '缴费时间',
       dataIndex: 'payDate',
       valueType: 'dateTime',
+      sorter: true,
     },
   ];
 

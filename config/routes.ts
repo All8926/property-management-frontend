@@ -10,7 +10,7 @@ export default [
   { path: '/welcome', icon: 'smile', component: './Welcome', name: 'Welcome' },
   {
     path: '/account',
-    icon: 'crown',
+    icon: 'UserOutlined',
     name: '用户中心',
     routes: [
       { path: '/account', redirect: '/account/user' },
@@ -39,6 +39,18 @@ export default [
     icon: 'ToolOutlined',
     path: '/repairs',
     component: './Repairs',
+  },
+  {
+    name: '访客管理',
+    icon: 'TeamOutlined',
+    path: '/visitor',
+    component: './Visitor',
+  },
+  {
+    name: '公告管理',
+    icon: 'NotificationOutlined',
+    path: '/notice',
+    component: './Notice',
   },
 
   { path: '/', redirect: '/welcome' },

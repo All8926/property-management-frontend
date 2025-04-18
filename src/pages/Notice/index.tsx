@@ -4,19 +4,19 @@ import { PageContainer, ProTable } from '@ant-design/pro-components';
 import CreateModal from './components/CreateModal';
 import UpdateModal from './components/UpdateModal';
 
-import {deleteComplaintUsingPost, listComplaintVoByPageUsingPost} from '@/services/backend/complaintController';
+import {deleteNoticeUsingPost, listNoticeVoByPageUsingPost} from '@/services/backend/noticeController';
 import {  useModel} from '@@/exports';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button,   message, Modal, Space, Tag, Typography,  } from 'antd';
 import React, { useRef, useState } from 'react';
-import DetailModal from "@/pages/Complaint/components/DetailModal";
+import DetailModal from "@/pages/Notice/components/DetailModal";
 
 /**
- * 投诉管理页面
+ * 公告管理页面
  *
  * @constructor
  */
-const ComplaintPage: React.FC = () => {
+const NoticePage: React.FC = () => {
   // 是否显示新建窗口
   const [createModalVisible, setCreateModalVisible] = useState<boolean>(false);
   // 是否显示更新窗口
@@ -25,7 +25,7 @@ const ComplaintPage: React.FC = () => {
   const [detailModalVisible, setDetailModalVisible] = useState<boolean>(false);
   const actionRef = useRef<ActionType>();
   // 当前用户点击的数据
-  const [currentRow, setCurrentRow] = useState<API.ComplaintVO>();
+  const [currentRow, setCurrentRow] = useState<API.NoticeVO>();
 
   const { initialState  } = useModel('@@initialState');
 
@@ -37,12 +37,12 @@ const ComplaintPage: React.FC = () => {
   const handleDelete = async (row: API.DeleteRequest) => {
     Modal.confirm({
       title: '确认删除?',
-      content: `你确定要删除该投诉吗?`,
+      content: `你确定要删除该公告吗?`,
       onOk: async () => {
         const hide = message.loading('正在删除');
         if (!row) return true;
         try {
-          await deleteComplaintUsingPost({
+          await deleteNoticeUsingPost({
             id: row.id as any,
           });
           hide();
@@ -64,7 +64,7 @@ const ComplaintPage: React.FC = () => {
   /**
    * 表格列配置
    */
-  const columns: ProColumns<API.ComplaintVO>[] = [
+  const columns: ProColumns<API.NoticeVO>[] = [
     {
       title: 'id',
       dataIndex: 'id',
@@ -74,50 +74,35 @@ const ComplaintPage: React.FC = () => {
     },
     {
       title: '标题',
-      dataIndex: 'title',
+      dataIndex: "title",
       valueType: 'text',
-    },
-    {
-      title: '详情',
-      dataIndex: 'content',
-      valueType: 'textarea',
-      hideInSearch: true,
-      hideInTable: true,
-    },
-    {
-      title: '投诉人',
-      dataIndex: ['user', 'userName'],
-      valueType: 'text',
-      hideInSearch: true,
-      hideInForm: true,
-    },
-    {
-      title: '状态',
-      dataIndex: 'status',
-      hideInForm: true,
-      valueEnum: {
-        0: '待处理',
-        1: '已处理',
-        2: '已驳回',
-      },
-      render: (_, record) => {
-        if (record.status === 0) {
-          return <Tag color="processing" >待处理</Tag>;
-        } else if (record.status === 1) {
-          return <Tag color="success">已处理</Tag>;
-        } else if (record.status === 2) {
-          return <Tag color="error">已驳回</Tag>;
-        }
-        return <Tag color="default">未知</Tag>;
-      },
     },
     {
       title: '创建时间',
       dataIndex: 'createTime',
       valueType: 'dateTime',
-      hideInSearch: true,
-      hideInForm: true,
       sorter: true,
+      hideInSearch: true,
+      hideInForm: true
+    },
+
+    {
+      title: '状态',
+      dataIndex: 'status',
+      hideInForm: true,
+      valueEnum: {
+        0: '未发布',
+        1: '已发布',
+      },
+      render: (_, record) => {
+        if (record.status === 0) {
+          return <Tag color="warning" >未发布</Tag>;
+        }
+        if (record.status === 1) {
+          return <Tag color="success">已发布</Tag>;
+        }
+        return <Tag color="default">未知</Tag>;
+      },
     },
 
     {
@@ -159,7 +144,7 @@ const ComplaintPage: React.FC = () => {
   return (
     <PageContainer>
       <ProTable<API.User>
-        headerTitle={'投诉列表'}
+        headerTitle={'公告列表'}
         actionRef={actionRef}
         rowKey="key"
         search={{
@@ -180,7 +165,7 @@ const ComplaintPage: React.FC = () => {
           const sortField = Object.keys(sort)?.[0];
           const sortOrder = sort?.[sortField] ?? undefined;
 
-          const { data, code } = await listComplaintVoByPageUsingPost({
+          const { data, code } = await listNoticeVoByPageUsingPost({
             ...params,
             sortField,
             sortOrder,
@@ -197,6 +182,7 @@ const ComplaintPage: React.FC = () => {
       />
       <CreateModal
         visible={createModalVisible}
+        columns={columns}
         onSubmit={() => {
           setCreateModalVisible(false);
           actionRef.current?.reload();
@@ -206,6 +192,7 @@ const ComplaintPage: React.FC = () => {
         }}
       />
       <UpdateModal
+        columns={columns}
         visible={updateModalVisible}
         oldData={currentRow}
         onSubmit={() => {
@@ -225,4 +212,4 @@ const ComplaintPage: React.FC = () => {
     </PageContainer>
   );
 };
-export default ComplaintPage;
+export default NoticePage;
