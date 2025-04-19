@@ -28,7 +28,7 @@ const DetailModal: React.FC<Props> = (props) => {
   return (
     <>
       <Modal
-        width={'40%'}
+        width={'45%'}
         destroyOnClose
         title={'详情'}
         open={visible}
@@ -41,7 +41,7 @@ const DetailModal: React.FC<Props> = (props) => {
         <>
           <div style={{fontSize: '22px', fontWeight: 'bold',textAlign:'center',marginBottom:'20px'}}>{oldData.title}</div>
           <div  dangerouslySetInnerHTML={{ __html: oldData.content as string }} />
-          <div style={{textAlign:'right',color:'#999',marginTop:'20px'}}>发布时间: {oldData.publishTime || '暂无'}</div>
+          <div style={{textAlign:'right',color:'#999',marginTop:'20px'}}>发布时间: {oldData.publishTime || '暂未发布'}</div>
         </>
 
       </Modal>

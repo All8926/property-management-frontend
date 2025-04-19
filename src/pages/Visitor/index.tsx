@@ -9,7 +9,7 @@ import {  useModel} from '@@/exports';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button,   message, Modal, Space, Tag, Typography,  } from 'antd';
 import React, { useRef, useState } from 'react';
-import DetailModal from "@/pages/Visitor/components/DetailModal";
+import DetailModal from "@/pages/Visitor/components/DetailModal"; 
 
 /**
  * 访客管理页面
@@ -76,17 +76,46 @@ const VisitorPage: React.FC = () => {
       title: '来访人姓名',
       dataIndex: "visitorName",
       valueType: 'text',
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '请输入来访人姓名',
+          },
+        ],
+      }
     },
     {
       title: '来访人手机号',
       dataIndex: 'visitorPhone',
       valueType: 'text',
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '请输入来访人手机号',
+          },
+        ],
+      }
     },
     {
       title: '来访时间',
       dataIndex: 'visitingTime',
       valueType: 'dateTime',
       sorter: true,
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '请输入来访时间',
+          },
+        ],
+      },
+      // fieldProps: {
+      //   disabledDate:(current: any) => {
+      //     return current && current < dayjs().startOf('day');
+      //   },
+      // }
     },
     {
       title: '备注',

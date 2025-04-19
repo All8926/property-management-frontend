@@ -1,15 +1,18 @@
-
+import DetailModal from '@/pages/Notice/components/DetailModal';
+import {
+  deleteNoticeUsingPost,
+  listNoticeVoByPageUsingPost,
+  publishNoticeUsingPost,
+} from '@/services/backend/noticeController';
+import { useModel } from '@@/exports';
+import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
+import { Button, message, Modal, Space, Tag, Typography } from 'antd';
+import React, { useRef, useState } from 'react';
+import { Access, useAccess } from 'umi';
 import CreateModal from './components/CreateModal';
 import UpdateModal from './components/UpdateModal';
-
-import {deleteNoticeUsingPost, listNoticeVoByPageUsingPost} from '@/services/backend/noticeController';
-import {  useModel} from '@@/exports';
-import { PlusOutlined } from '@ant-design/icons';
-import { Button,   message, Modal, Space, Tag, Typography,  } from 'antd';
-import React, { useRef, useState } from 'react';
-import DetailModal from "@/pages/Notice/components/DetailModal";
 
 /**
  * 公告管理页面
@@ -27,8 +30,8 @@ const NoticePage: React.FC = () => {
   // 当前用户点击的数据
   const [currentRow, setCurrentRow] = useState<API.NoticeVO>();
 
-  const { initialState  } = useModel('@@initialState');
-
+  const { initialState } = useModel('@@initialState');
+  const access = useAccess();
   /**
    * 删除节点
    *
@@ -61,6 +64,19 @@ const NoticePage: React.FC = () => {
     });
   };
 
+  const handlePublish = async (id: number) => {
+    const hide = message.loading('正在操作');
+    try {
+      await publishNoticeUsingPost(id);
+      hide();
+      message.success('操作成功');
+      actionRef?.current?.reload();
+    } catch (error: any) {
+      hide();
+    }
+  };
+
+
   /**
    * 表格列配置
    */
@@ -74,7 +90,7 @@ const NoticePage: React.FC = () => {
     },
     {
       title: '标题',
-      dataIndex: "title",
+      dataIndex: 'title',
       valueType: 'text',
     },
     {
@@ -83,7 +99,7 @@ const NoticePage: React.FC = () => {
       valueType: 'dateTime',
       sorter: true,
       hideInSearch: true,
-      hideInForm: true
+      hideInForm: true,
     },
 
     {
@@ -96,7 +112,7 @@ const NoticePage: React.FC = () => {
       },
       render: (_, record) => {
         if (record.status === 0) {
-          return <Tag color="warning" >未发布</Tag>;
+          return <Tag color="warning">未发布</Tag>;
         }
         if (record.status === 1) {
           return <Tag color="success">已发布</Tag>;
@@ -110,23 +126,26 @@ const NoticePage: React.FC = () => {
       dataIndex: 'option',
       valueType: 'option',
       render: (_, record) => (
-        <Space size="middle"  >
-          {initialState?.currentUser?.id === record.userId && (
-            <>
-              {record.status === 0 && (<Typography.Link
-                key="update"
-                onClick={() => {
-                  setCurrentRow(record);
-                  setUpdateModalVisible(true);
-                }}
-              >
-                修改
-              </Typography.Link>)}
+        <Space size="middle">
+           <Access accessible={access.canAdmin} fallback={null} key="createBtn">
+           <Space size="middle">
+                <Typography.Link
+                  key="update"
+                  onClick={() => {
+                    setCurrentRow(record);
+                    setUpdateModalVisible(true);
+                  }}
+                >
+                  修改
+                </Typography.Link>
               <Typography.Link type="danger" onClick={() => handleDelete(record)} key="delete">
                 删除
               </Typography.Link>
-            </>
-          )}
+              <Typography.Link type="warning" onClick={() => handlePublish(record.id || 0)} key="publish">
+                {record.status === 0 ? '发布' : '取消发布'}
+              </Typography.Link>
+              </Space>
+          </Access>
           <Typography.Link
             key="detail"
             onClick={() => {
@@ -136,7 +155,6 @@ const NoticePage: React.FC = () => {
           >
             查看
           </Typography.Link>
-
         </Space>
       ),
     },
@@ -151,15 +169,18 @@ const NoticePage: React.FC = () => {
           labelWidth: 120,
         }}
         toolBarRender={() => [
-          <Button
-            key="create"
-            type="primary"
-            onClick={() => {
-              setCreateModalVisible(true);
-            }}
-          >
-            <PlusOutlined /> 新建
-          </Button>,
+          <Access accessible={access.canAdmin} fallback={null} key="createBtn">
+            <Button
+              key="create"
+              type="primary"
+              onClick={() => {
+                setCreateModalVisible(true);
+              }}
+            >
+              <PlusOutlined /> 新建
+            </Button>
+            ,
+          </Access>,
         ]}
         request={async (params, sort, filter) => {
           const sortField = Object.keys(sort)?.[0];
@@ -204,11 +225,16 @@ const NoticePage: React.FC = () => {
           setUpdateModalVisible(false);
         }}
       />
-      <DetailModal visible={detailModalVisible} onCancel={setDetailModalVisible.bind(null, false)} oldData={currentRow} onSubmit={() => {
-        setDetailModalVisible(false);
-        setCurrentRow(undefined);
-        actionRef.current?.reload();
-      }} />
+      <DetailModal
+        visible={detailModalVisible}
+        onCancel={setDetailModalVisible.bind(null, false)}
+        oldData={currentRow}
+        onSubmit={() => {
+          setDetailModalVisible(false);
+          setCurrentRow(undefined);
+          actionRef.current?.reload();
+        }}
+      />
     </PageContainer>
   );
 };

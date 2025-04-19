@@ -16,7 +16,8 @@ const WangEditor: React.FC<WangEditorProps> = ({ value, onChange, height = 400 }
   const [html, setHtml] = useState<string>(value);
 
   // 工具栏配置
-  const toolbarConfig: Partial<IToolbarConfig> = {};
+  const toolbarConfig: Partial<IToolbarConfig> = {
+  };
 
   // 编辑器配置
   const editorConfig: Partial<IEditorConfig> = {
@@ -26,6 +27,11 @@ const WangEditor: React.FC<WangEditorProps> = ({ value, onChange, height = 400 }
         fieldName: 'file',
         async customUpload(file: File, insertFn: (url: string) => void) {
           try {
+            // 校验图片大小
+            if (file.size > 1024 * 1024 * 2) {
+              message.error('图片大小不能超过2MB');
+              return;
+            }
             const res = await uploadFileUsingPost({ biz: 'notice_image' }, {}, file);
             insertFn(res.data as string); // 插入图片链接
           } catch (err) {

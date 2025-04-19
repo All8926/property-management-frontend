@@ -1,11 +1,8 @@
-import { addVisitorUsingPost } from '@/services/backend/visitorController';
-import { uploadFileUsingPost } from '@/services/backend/fileController';
-import { checkImageFile } from '@/utils';
-import {ProColumns, ProForm, ProFormInstance, ProFormText, ProFormTextArea, ProTable} from '@ant-design/pro-components';
+import { addVisitorUsingPost } from '@/services/backend/visitorController'; 
+import {ProColumns, ProTable} from '@ant-design/pro-components';
 import '@umijs/max';
-import { Form, message, Modal, Upload } from 'antd';
-import { UploadFile, UploadProps } from 'antd/lib/upload/interface';
-import React, { useRef, useState } from 'react';
+import {  message, Modal } from 'antd';
+import React, {  } from 'react';
 
 interface Props {
   visible: boolean;
@@ -53,7 +50,6 @@ const CreateModal: React.FC<Props> = (props) => {
       open={visible}
       footer={null}
       onCancel={() => {
-
         onCancel?.();
       }}
     >

@@ -49,7 +49,7 @@ const formRef = useRef<ProFormInstance>();
 
   return (
     <Modal
-      width={'40%'}
+      width={'45%'}
       key={'createModal'}
       maskClosable={false}
       destroyOnClose
@@ -73,7 +73,7 @@ const formRef = useRef<ProFormInstance>();
       >
         <ProFormText rules={[{ required: true, message: '标题不能为空' }]} name="title" label="标题" />
         <Form.Item label="详情"   required >
-          <WangEditor value={content} onChange={setContent} height={500} />
+          <WangEditor value={content} onChange={setContent} height={400} />
         </Form.Item>
       </ProForm>
     </Modal>
